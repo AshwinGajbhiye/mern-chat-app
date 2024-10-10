@@ -68,6 +68,7 @@ export const login = async (req, res) => {
 
         generateTokenAndSetCookies(user._id,res);
 
+
         res.status(200).json({
             _id:user._id,
             fullName:user.fullName,
@@ -83,11 +84,14 @@ export const login = async (req, res) => {
 
 export const logout = (req, res) => {
     try {
-        res.cookie("jwt"," ",{maxAge:0});
-        res.status(200).json({message:"Logged out succesfully"});
+        // Clear the cookie by setting the expiration date to a past date
+        res.cookie("jwt", "", { maxAge: 0});
+        
+        // Optionally, you can also invalidate the session or perform other cleanup here
+        res.status(200).json({ message: "Logged out successfully" });
         
     } catch (error) {
-        console.log("error in signup controller", error.message);
-        res.status(400).json({ error: "Internal server error" }); 
+        console.error("Error in logout controller", error.message); // Use the correct context in the log
+        res.status(500).json({ error: "Internal server error" }); // Use 500 for server errors
     }
 }
